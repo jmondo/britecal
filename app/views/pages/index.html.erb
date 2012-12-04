@@ -1,0 +1,7 @@
+<h1>Hello World!</h1>
+
+<% if current_uid? %>
+  <%= link_to 'Sign out', session_path, :method => :delete  %>
+<% else %>
+  Want your eventbrite calendar? <%= link_to 'Sign in with Eventbrite', '/auth/eventbrite' %>
+<% end %>
