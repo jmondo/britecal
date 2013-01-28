@@ -84,6 +84,7 @@ GEM
     omniauth-oauth2 (1.0.3)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
+    pg (0.14.1)
     polyglot (0.3.3)
     pry (0.9.11.4)
       coderay (~> 1.0.5)
@@ -148,6 +149,7 @@ DEPENDENCIES
   eventbrite-client
   jquery-rails
   omniauth-eventbrite
+  pg
   pry-rails
   rails (= 3.2.9)
   ri_cal
