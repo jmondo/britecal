@@ -1,22 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_uid?
-
-  def current_uid
-    session["oauth_uid"]
-  end
-
-  def current_token
-    session["oauth_token"]
-  end
-
-  def current_uid
-    session["oauth_token"]
-  end
+  helper_method :current_user?, :current_user
 
   private
 
-  def current_uid?
-    current_uid.present?
+  def current_user
+    @user ||= session[:user_id] && User.find_by_id(session[:user_id])
+  end
+
+  def current_user?
+    !!current_user
   end
 end
