@@ -38,12 +38,37 @@ class Tickets
   #   tickets.map(&:event)
   # end
 
+  def ical_events
+    @calendar ||= Cal.new(tickets.map(&:event).map(&:ical)).calendar
+  end
+
   private
 
   def ticket_data
     ticket_objects.map {|h| h['order']}
   end
 
+end
+
+class Cal
+  attr_reader :events
+
+  def initialize(ical_events)
+    @events = ical_events
+  end
+
+  def calendar
+    cal = RiCal.Calendar do
+      add_x_property 'X-WR-CALNAME', 'Eventbrite Events'
+      add_x_property 'X-WR-CALDESC', 'My feed of eventbrite events, powered by britecal'
+    end
+
+    events.each do |ev|
+      cal.add_subcomponent(ev)
+    end
+
+    cal
+  end
 end
 
 class Ticket
@@ -58,7 +83,24 @@ class Ticket
   end
 end
 
-Event = Struct.new(:details)
+class Event
+  attr_reader :details, :ical
+
+  def initialize(details)
+    @details = details
+  end
+
+  def ical
+    event = RiCal::Component::Event.new
+    event.summary = details['title']
+    event.description = details['url']
+    event.url = details['url']
+    event.dtstart = Time.parse(details['start_date']).set_tzid(details['timezone'])
+    event.dtend =  Time.parse(details['end_date']).set_tzid(details['timezone'])
+    event.location = [details['venue']['name'], details['venue']['address'], details['venue']['address2'], details['venue']['city'], details['venue']['state'], details['venue']['postal_code'], "(#{details['venue']["Lat-Long"]})"].join(' ')
+    event
+  end
+end
 
 # TicketsResponse(response).tickets[1].event.details
 # # TicketsResponse(response).tickets.events

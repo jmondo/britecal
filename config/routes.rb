@@ -4,5 +4,5 @@ BriteCal::Application.routes.draw do
   resource :session, only: [:destroy]
   resources :calendars, only: [:show]
 
-  match 'cal/:cal_token' => 'calendars#show', as: :ical
+  match 'cal/:cal_token.ics' => 'calendars#show', as: :ical
 end

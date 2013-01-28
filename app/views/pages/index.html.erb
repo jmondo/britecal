@@ -3,6 +3,7 @@
 <% if current_user? %>
   <%= label_tag 'cal_url', 'Your ical link (do not share)' %><br />
   <%= text_field_tag 'cal_url', ical_url(current_user.cal_token) %>
+  <%= link_to ical_url(current_user.cal_token), ical_url(current_user.cal_token) %>
   <br />
   <br />
   <%= link_to 'Sign out', session_path, :method => :delete  %>

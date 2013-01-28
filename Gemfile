@@ -24,6 +24,7 @@ gem 'jquery-rails'
 gem 'eventbrite-client'
 gem 'omniauth-eventbrite'
 gem 'awesome_print'
+gem 'ri_cal'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -37,5 +38,4 @@ gem 'awesome_print'
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-gem 'debugger'
+gem 'pry-rails'
