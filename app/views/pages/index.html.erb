@@ -1,9 +1,13 @@
-<h1>Hello Events!</h1>
-
+<h1>BriteCal!</h1>
+<h2>Your eventbrite events, on your calendar!</h2>
 <% if current_user? %>
-  <%= label_tag 'cal_url', 'Your ical link (do not share)' %><br />
-  <%= text_field_tag 'cal_url', ical_url(current_user.cal_token) %>
-  <%= link_to ical_url(current_user.cal_token), ical_url(current_user.cal_token) %>
+  <% url = ical_url(current_user.cal_token) %>
+  <p>Only share with those you trust. This URL cannot be reset.</p>
+  <%= label_tag 'cal_url', 'Your ical link' %>:
+  <%= text_field_tag 'cal_url', url %><br />
+  Download: <%= link_to url, url %> <br />
+  Add to Google: <a href="http://www.google.com/calendar/render?cid=<%= ical_url(current_user.cal_token) %>" target="_blank"><img src="//www.google.com/calendar/images/ext/gc_button1.gif" border=0></a>
+
   <br />
   <br />
   <%= link_to 'Sign out', session_path, :method => :delete  %>
