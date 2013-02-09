@@ -30,6 +30,7 @@ gem 'eventbrite-client'
 gem 'omniauth-eventbrite'
 gem 'awesome_print'
 gem 'ri_cal', git: 'git://github.com/KonaTeam/ri_cal.git'
+gem 'nokogiri'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -44,3 +45,4 @@ gem 'ri_cal', git: 'git://github.com/KonaTeam/ri_cal.git'
 # gem 'capistrano'
 
 gem 'pry-rails'
+gem 'pry-nav'

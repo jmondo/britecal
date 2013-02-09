@@ -93,12 +93,75 @@ class Event
   def ical
     event = RiCal::Component::Event.new
     event.summary = details['title']
-    event.description = details['url']
+    event.description = Description.new(url: details['url'], html: details['description']).plain_text
     event.url = details['url']
     event.dtstart = Time.parse(details['start_date']).set_tzid(details['timezone'])
     event.dtend =  Time.parse(details['end_date']).set_tzid(details['timezone'])
-    event.location = [details['venue']['name'], details['venue']['address'], details['venue']['address2'], details['venue']['city'], details['venue']['state'], details['venue']['postal_code'], "(#{details['venue']["Lat-Long"]})"].join(' ')
+    event.location = Address.new(details: details).street_address
     event
+  end
+
+end
+
+class Address
+  attr_reader :details
+  def initialize(options={})
+    @details = options[:details]
+  end
+
+  def street_address
+    attributes.join(' ')
+  end
+
+  private
+
+  def attributes
+    [
+      details['venue']['name'],
+      details['venue']['address'],
+      details['venue']['address2'],
+      details['venue']['city'],
+      details['venue']['state'],
+      details['venue']['postal_code']
+    ]
+  end
+end
+
+class Description
+  attr_reader :url, :html
+
+  def initialize(options = {})
+    @url, @html = options[:url], options[:html]
+  end
+
+  def plain_text
+    @plain_text ||= "#{text_from_doc(massage_doc(noko_doc))} \n\n #{url}"
+  end
+
+  private
+
+  def noko_doc
+    @doc ||= Nokogiri::HTML(html)
+  end
+
+  def manipulate_image_node(node)
+    if node.parent && node.parent.name == 'a'
+      node.parent.remove
+    end
+    node.remove
+  end
+
+  def massage_doc(doc)
+    doc.css('script').each { |node| node.remove }
+    doc.css('img').each { |node| manipulate_image_node(node) }
+    doc.css('a').each { |node| node.swap("#{node.text} (#{node.attributes['href'].value})") }
+    doc.css('br').each { |node| node.swap("\n") }
+    doc.css('li').each { |node| node.swap("- #{node.text}") }
+    doc
+  end
+
+  def text_from_doc(doc)
+    doc.css('body').text.squeeze(" ").squeeze("\n")
   end
 end
 
